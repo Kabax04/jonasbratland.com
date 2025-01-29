@@ -6,3 +6,5 @@ sass:
   style: compressed  # Komprimerer den resulterende CSS-filen
   load_paths:
     - "."  # Dette legger til hovedmappen som et søkested for SCSS-filer
+includes:
+  - head
