@@ -1,2 +1,2 @@
 theme: jekyll-theme-hacker
-include: [style.css]
+include: ["style.css"]
