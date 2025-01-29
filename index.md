@@ -1,6 +1,6 @@
 # Velkommen til min nettside
 
-[__Hjem__](index.md) | [Om oss](om.md) | [Kontakt](kontakt.md)
+[__>Hjem<__](index.md) | [Om oss](om.md) | [Kontakt](kontakt.md)
 
 ---
 
