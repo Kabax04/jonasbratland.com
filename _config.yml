@@ -1,3 +1,4 @@
+include: ["style.css"]
 css: "style.css"
 title: jonasbratland.com
 logo: img/terminal_icon.png
