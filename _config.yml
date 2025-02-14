@@ -1,5 +1,4 @@
-#theme: jekyll-theme-hacker
-css: "style.css"
+css: "style.scss"
 title: jonasbratland.com
 logo: img/terminal_icon.png
 sass:
