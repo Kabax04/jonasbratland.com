@@ -1,7 +1,13 @@
----
----
+body {
+    background-color: #111; /* Mørk bakgrunn */
+    color: #eeeeee; /* Nesten-hvit tekst */
+    font-family: Arial, sans-serif;
+}
 
-@import "{{ site.theme }}";
-.btn {
-    display: none;
+a {
+    color: #10c610; /* Grønne lenker */
+}
+
+h1 {
+    font-size: 2em;
 }
