@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="/style.css">
 [__>Hjem<__](index.md) | [Om oss](om.md) | [Kontakt](kontakt.md)
 
 ---
