@@ -2,7 +2,7 @@ body {
     background-image: url('img/darktexture.png'); /* Bakgrunnsbilde */
     background-repeat: repeat; /* Gjentar bildet horisontalt og vertikalt */
     background-size: auto; /* Bruker bildets originale størrelse */
-    color: #eeeeee; /* Nesten-hvit tekst */
+    color: #e4e4e4; /* Nesten-hvit tekst */
     font-family: Arial, sans-serif;
 }
 
