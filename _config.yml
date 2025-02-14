@@ -1,10 +1,6 @@
 include: ["style.css"]
-css: "style.css"
 title: jonasbratland.com
-logo: img/terminal_icon.png
-sass:
-  style: compressed  # Komprimerer den resulterende CSS-filen
-  load_paths:
-    - "."  # Dette legger til hovedmappen som et søkested for SCSS-filer
+logo: favicon.png
+
 includes:
   - head
