@@ -8,3 +8,4 @@ sass:
     - "."  # Dette legger til hovedmappen som et søkested for SCSS-filer
 includes:
   - head
+<link rel="icon" type="image/png" href="favicon.png">
