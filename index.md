@@ -1,6 +1,5 @@
 <link rel="stylesheet" type="text/css" href="/custom.css">
-
-title: jonasbratland.com
+<title>jonasbratland.com</title>
 
 [__>Hjem<__](index.md) | [Om oss](om.md) | [Kontakt](kontakt.md)
 
