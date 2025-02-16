@@ -51,6 +51,13 @@ td a {
     border: none
 }
 
-table tr {
+.markdown-body table tr {
     background-color: transparent;
+    border-top: none;
+    
+}
+
+.markdown-body table th,
+.markdown-body table td {
+    border: none;
 }
