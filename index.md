@@ -4,9 +4,9 @@
 
 ---
 
-##Latest posts
+### Latest posts
 
 [Split FLAC CUE files with foobar2000](blog/splitflacfoobar.md)
 
-##Other
-(under construction)
+### Other
+(this website is under construction)
