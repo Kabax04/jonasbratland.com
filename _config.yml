@@ -1,6 +1,6 @@
 include: ["style.css"]
 title: jonasbratland.com
-logo: favicon.png
+logo: favicon.ico
 
 includes:
   - head
