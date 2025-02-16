@@ -50,3 +50,7 @@ td a {
     padding: 10px; /* Legger til padding for å få knappeutseende */
     border: none
 }
+
+table tr {
+    background-color: none
+}
