@@ -1,3 +1,9 @@
+<link rel="stylesheet" type="text/css" href="/custom.css">
+
+[Hjem](index.md) | [Om oss](om.md) | [Kontakt](kontakt.md)
+
+---
+
 # Use foobar2000 to split your FLAC and CUE files into individual flac files
 
 Are you having trouble following these instructuions? Watch the video tutorial [here!](https://youtu.be/lc4BL2adPeo?si=y3jApKJ0NXNRdojd)
