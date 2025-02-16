@@ -13,3 +13,18 @@ a {
 h1 {
     font-size: 2em;
 }
+/* Endrer bakgrunnsfargen på knappene */
+nav a {
+    background-color: #222;  /* Mørk grå bakgrunn */
+    color: #fff;             /* Hvit tekst */
+    padding: 10px 15px;      /* Litt mer padding */
+    border-radius: 5px;      /* Runde hjørner */
+    text-decoration: none;   /* Fjerner understrek */
+    transition: 0.3s;        /* Glatt overgangseffekt */
+}
+
+/* Endrer fargen når musen holdes over knappen */
+nav a:hover {
+    background-color: #444;  /* Lysere grå når du holder over */
+    color: #00ff00;         /* Grønn tekst for en kul effekt */
+}
