@@ -4,4 +4,9 @@
 
 ---
 
-Dette er en enkel nettside laget med Markdown og GitHub Pages.
+##Latest posts
+
+[Split FLAC CUE files with foobar2000](blog/splitflacfoobar.md)
+
+##Other
+(under construction)
