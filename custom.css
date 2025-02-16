@@ -52,5 +52,5 @@ td a {
 }
 
 table tr {
-    background-color: none
+    background-color: transparent;
 }
