@@ -15,7 +15,7 @@ h1 {
 }
 /* Endrer bakgrunnsfargen på knappene */
 nav a {
-    background-color: #222;  /* Mørk grå bakgrunn */
+    background-color: #222 !important;  /* Mørk grå bakgrunn */
     color: #fff;             /* Hvit tekst */
     padding: 10px 15px;      /* Litt mer padding */
     border-radius: 5px;      /* Runde hjørner */
