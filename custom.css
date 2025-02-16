@@ -32,6 +32,7 @@ table a:hover {
 table {
     border-collapse: collapse; /* Slår sammen kantlinjer */
     width: 100%; /* Sikrer at tabellen fyller plassen */
+    border-spacing: 0
 }
 
 /* Fjerner padding og margin fra tabellcellene */
@@ -39,6 +40,7 @@ td {
     padding: 0;  /* Ingen innvendig mellomrom */
     margin: 0;   /* Ingen utvendig mellomrom */
     text-align: center; /* Sentrerer teksten */
+    border: none; /* Fjerner eventuelle grenser */
 }
 
 /* Sikrer at lenkene (knappene) fyller hele tabellcellene */
@@ -46,4 +48,5 @@ td a {
     display: block; /* Gjør lenkene til blokkelementer */
     width: 100%; /* Fyller hele cellen */
     padding: 10px; /* Legger til padding for å få knappeutseende */
+    border: none
 }
