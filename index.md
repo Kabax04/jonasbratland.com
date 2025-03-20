@@ -9,6 +9,9 @@
 [Split FLAC CUE files with foobar2000](blog/splitflacfoobar.md)
 
 ### Other
+
+[Tools](tools.md)
+
 [Github](https://github.com/Kabax04/jonasbratland.com)
 
 (this website is under construction)
