@@ -4,4 +4,4 @@
 
 ---
 
-<iframe src="tools/tverdi.html" width="800" height="600"></iframe>
+<iframe src="tools/tverdi.html" width="500" height="400"></iframe>
