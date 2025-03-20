@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="/custom.css">
 
-[Hjem](index.md) | [Om oss](om.md) | [Kontakt](kontakt.md)
+[Hjem](main/index.md) | [Om oss](main/om.md) | [Kontakt](main/kontakt.md)
 
 ---
 
