@@ -14,4 +14,6 @@
 
 [Github](https://github.com/Kabax04/jonasbratland.com)
 
+[Nyttige WMS-tjenester](wmstjenester.md)
+
 (this website is under construction)
