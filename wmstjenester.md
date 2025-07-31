@@ -4,6 +4,8 @@
 
 ---
 
-Nyttige WMS-tjenester
+##Nyttige WMS-tjenester
 
-Topografisk gråtonekart: [https://wms.geonorge.no/skwms1/wms.topograatone?](https://wms.geonorge.no/skwms1/wms.topograatone?)
+###Topografisk gråtonekart: 
+Koordinatsystem: EPSG:25833
+URL: [https://wms.geonorge.no/skwms1/wms.topograatone?](https://wms.geonorge.no/skwms1/wms.topograatone?)
