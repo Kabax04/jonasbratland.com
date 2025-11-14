@@ -14,7 +14,7 @@ table th, table td {
 </style>
 
 
-<div style="text-align:center; margin:48px 0;">
+<div style="text-align:center; margin:64px 0;">
   <form method="GET" action="https://duckduckgo.com/" style="display:inline-block;">
     <input type="text" name="q" placeholder="Search with DuckDuckGo" style="padding:6px; width:640px;">
   </form>
