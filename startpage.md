@@ -11,6 +11,12 @@ table tr:nth-child(even) {
 table th, table td {
   background-color: transparent !important;
 }
+
+/* Sentrer Markdown-tabeller */
+table {
+  margin: 0 auto !important;
+  border-collapse: collapse;
+}
 </style>
 
 
