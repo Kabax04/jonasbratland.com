@@ -1,12 +1,21 @@
 <link rel="stylesheet" type="text/css" href="/custom.css">
 
+#
+#
+#
+
 <div align="center">
 
 <form method="GET" action="https://duckduckgo.com/">
   <input type="text" name="q" placeholder="Search with DuckDuckGo" style="padding:6px; width:640px;">
 </form>
 
+</div>
+
 ---
+
+#
+#
 
 | Frequently used | Tools          | Sailing the seas    | Streaming       | Shopping          |
 | --------------- | -------------- | ------------------- | --------------- | ----------------- |
@@ -16,7 +25,6 @@
 |                 |                | [ext.to][ext]       | [TV2][tv2]      | [Komplett][kom]   |
 |                 |                |                     | [Max][max]      | [Prisjakt][pris]  |
 
-</div>
 
 [GH]: https://github.com/Kabax04
 [nmbu]: https://nmbu.instructure.com/
