@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="/custom.css">
+
 <div align="center">
 
 <form method="GET" action="https://duckduckgo.com/">
