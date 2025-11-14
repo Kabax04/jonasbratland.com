@@ -1,8 +1,17 @@
-<link rel="stylesheet" type="text/css" href="/custom.css">
+<link rel="stylesheet" type="text/css" href="custom.css">
 
-#
-#
-#
+<style>
+/* Fjern zebra-striping og sikre transparent bakgrunn */
+table tbody tr:nth-child(even),
+table tr:nth-child(even) {
+  background-color: transparent !important;
+}
+
+/* Hvis temaet setter cellbakgrunn */
+table th, table td {
+  background-color: transparent !important;
+}
+</style>
 
 <div align="center">
 
@@ -14,12 +23,11 @@
 
 ---
 
-#
-#
+
 
 | Frequently used | Tools          | Sailing the seas    | Streaming       | Shopping          |
 | --------------- | -------------- | ------------------- | --------------- | ----------------- |
-| [Github](GH)    | [ChatGPT](GPT) | [FMHY][FMHY]        | [Youtube](YT)   | [GG.deals][GG]    |
+| [Github][GH]    | [ChatGPT][GPT] | [FMHY][FMHY]        | [Youtube][YT]   | [GG.deals][GG]    |
 | [Canvas][nmbu]  | [Earth][earth] | [1337x][1337x]      | [Jellyfin][JF]  | [AliExpress][ali] |
 | [NRK][nrk]      | [PDF][pdf]     | [Rastastugan][RAST] | [NRK TV][nrktv] | [Jula][jula]      |
 |                 |                | [ext.to][ext]       | [TV2][tv2]      | [Komplett][kom]   |
