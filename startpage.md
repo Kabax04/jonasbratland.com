@@ -46,18 +46,19 @@ table {
 ---
 
 
-| Frequently used | Tools          | Sailing the seas    | Streaming       | Shopping          |
-| --------------- | -------------- | ------------------- | --------------- | ----------------- |
-| [Github][GH]    | [ChatGPT][GPT] | [FMHY][FMHY]        | [Youtube][YT]   | [GG.deals][GG]    |
-| [Canvas][nmbu]  | [Earth][earth] | [1337x][1337x]      | [Jellyfin][JF]  | [AliExpress][ali] |
-| [NRK][nrk]      | [PDF][pdf]     | [Rastastugan][RAST] | [NRK TV][nrktv] | [Jula][jula]      |
-|                 |                | [ext.to][ext]       | [TV2][tv2]      | [Komplett][kom]   |
-|                 |                |                     | [Max][max]      | [Prisjakt][pris]  |
+| **Frequently used** | **Tools**      | **Sailing the seas** | **Streaming**   | **Shopping**      |
+| ------------------- | -------------- | -------------------- | --------------- | ----------------- |
+| [Github][GH]        | [ChatGPT][GPT] | [FMHY][FMHY]         | [Youtube][YT]   | [GG.deals][GG]    |
+| [Canvas][nmbu]      | [Earth][earth] | [1337x][1337x]       | [Jellyfin][JF]  | [AliExpress][ali] |
+| [NRK][nrk]          | [PDF][pdf]     | [Rastastugan][RAST]  | [NRK TV][nrktv] | [Jula][jula]      |
+| [IMDB][imdb]        |                | [ext.to][ext]        | [TV2][tv2]      | [Komplett][kom]   |
+|                     |                |                      | [Max][max]      | [Prisjakt][pris]  |
 
 
 [GH]: https://github.com/Kabax04
 [nmbu]: https://nmbu.instructure.com/
 [nrk]: https://www.nrk.no/
+[imdb]: https://www.imdb.com/
 
 [GPT]: https://chat.openai.com/
 [earth]: https://earth.google.com/web/
