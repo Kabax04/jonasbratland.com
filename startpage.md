@@ -12,9 +12,13 @@ table th, table td {
   background-color: transparent !important;
 }
 
-/* Sentrer Markdown-tabeller */
+/* Sentrer Markdown-tabeller - tvinger auto-bredde så margin:auto fungerer */
 table {
-  margin: 0 auto !important;
+  display: table !important;
+  width: auto !important;
+  max-width: 90% !important; /* begrens bredde på store skjermer */
+  margin-left: auto !important;
+  margin-right: auto !important;
   border-collapse: collapse;
 }
 
