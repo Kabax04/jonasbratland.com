@@ -29,7 +29,7 @@ table {
 
 
 <div style="text-align:center; margin:64px 0;">
-  <img src="img/ddg.svg"
+  <img src="img/ddg.png"
        alt="DuckDuckGo logo"
        class="logo">
   <form method="GET" action="https://duckduckgo.com/" style="display:inline-block;">
