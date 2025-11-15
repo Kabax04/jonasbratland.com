@@ -21,6 +21,9 @@ table {
 
 
 <div style="text-align:center; margin:64px 0;">
+  <img src="https://logos-world.net/wp-content/uploads/2022/04/DuckDuckGo-Logo-2008.png"
+       alt="DuckDuckGo logo"
+       style="width:360px; display:block; margin:0 auto 16px;">
   <form method="GET" action="https://duckduckgo.com/" style="display:inline-block;">
     <input type="text" name="q" placeholder="Search with DuckDuckGo" style="padding:6px; width:640px;">
   </form>
