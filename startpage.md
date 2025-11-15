@@ -18,7 +18,7 @@ table {
   border-collapse: collapse;
 }
 
-/* Logo-stil: bruk lokal fil og prøv å maskere hvit bakgrunn på mørke temaer */
+/* Logo-stil: bruk lokal SVG (transparent bakgrunn) */
 .logo {
   width:360px;
   display:block;
@@ -29,7 +29,7 @@ table {
 
 
 <div style="text-align:center; margin:64px 0;">
-  <img src="img/ddg.png"
+  <img src="img/ddg.svg"
        alt="DuckDuckGo logo"
        class="logo">
   <form method="GET" action="https://duckduckgo.com/" style="display:inline-block;">
