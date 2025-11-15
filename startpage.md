@@ -18,12 +18,13 @@ table {
   border-collapse: collapse;
 }
 
-/* Logo-stil: bruk lokal SVG (transparent bakgrunn) */
+/* Logo-stil: bruk lokal SVG/PNG (gjennomsiktig bakgrunn) */
 .logo {
   width:360px;
   display:block;
   margin:0 auto 16px;
-  background: transparent;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 </style>
 
@@ -31,7 +32,8 @@ table {
 <div style="text-align:center; margin:64px 0;">
   <img src="img/ddg.png"
        alt="DuckDuckGo logo"
-       class="logo">
+       class="logo"
+       style="background:transparent !important;">
   <form method="GET" action="https://duckduckgo.com/" style="display:inline-block;">
     <input type="text" name="q" placeholder="Search with DuckDuckGo" style="padding:6px; width:640px;">
   </form>
