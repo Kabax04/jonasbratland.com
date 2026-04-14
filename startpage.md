@@ -65,7 +65,7 @@ table {
 [pdf]: https://ilovepdf.com/
 
 [FMHY]: https://fmhy.net/
-[1337x]: https://1337x.to/
+[1337x]: https://1337x.to/home
 [RAST]: https://rastastugan.org/
 [ext]: https://ext.to/
 
