@@ -8,9 +8,13 @@
 
 [Split FLAC CUE files with foobar2000](blog/splitflacfoobar.md)
 
-### Other
+### Tools
 
-[Tools](tools.md)
+[T-verdi kalkulator](tools.md)
+
+[Konverter .kof til .geojson](kof2geojson.html)
+
+### Other
 
 [Github](https://github.com/Kabax04/jonasbratland.com)
 
