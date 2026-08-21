@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOF → GeoJSON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14171a;
+    --bg-grid: rgba(233, 230, 221, 0.035);
+    --panel: #1b1f22;
+    --panel-raised: #21262a;
+    --border: #2b3136;
+    --border-soft: #23282c;
+    --text: #e9e6dd;
+    --text-dim: #8b9298;
+    --text-faint: #565d63;
+    --amber: #d9a441;
+    --amber-dim: #b8863a;
+    --green: #7fae8e;
+    --red: #c1554d;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      repeating-linear-gradient(0deg, var(--bg-grid) 0px, var(--bg-grid) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--bg-grid) 0px, var(--bg-grid) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--font-display);
+    padding: 48px 20px 80px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wrap { width: 100%; max-width: 720px; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 9px; height: 9px;
+    border: 1.5px solid var(--amber);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+  }
+  .eyebrow::after {
+    content: "";
+    position: absolute;
+    margin-left: -6.25px;
+    width: 1px; height: 14px;
+    background: var(--amber);
+    opacity: .6;
+  }
+
+  h1 {
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+  }
+  h1 span { color: var(--text-dim); font-weight: 400; }
+
+  .sub {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: 54ch;
+    margin: 0 0 36px;
+  }
+
+  .dropzone {
+    display: block;
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    padding: 40px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+    position: relative;
+  }
+  .dropzone:hover, .dropzone.drag {
+    border-color: var(--amber-dim);
+    background: var(--panel-raised);
+  }
+  .dropzone input { display: none; }
+  .reticle {
+    width: 34px; height: 34px;
+    margin: 0 auto 14px;
+    position: relative;
+    opacity: .8;
+  }
+  .reticle::before, .reticle::after {
+    content: "";
+    position: absolute;
+    background: var(--text-dim);
+  }
+  .reticle::before { top: 0; bottom: 0; left: 50%; width: 1px; transform: translateX(-50%); }
+  .reticle::after { left: 0; right: 0; top: 50%; height: 1px; transform: translateY(-50%); }
+  .reticle-circle {
+    position: absolute; inset: 6px;
+    border: 1px solid var(--text-dim);
+    border-radius: 50%;
+  }
+  .drop-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .drop-sub { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-faint); }
+  .drop-filename {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--amber);
+    margin-top: 10px;
+  }
+
+  .error-box {
+    margin-top: 16px;
+    border: 1px solid rgba(193, 85, 77, 0.4);
+    background: rgba(193, 85, 77, 0.08);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: #e0938c;
+    line-height: 1.6;
+    display: none;
+  }
+  .error-box.show { display: block; }
+  .error-box strong { color: var(--red); }
+
+  .results { display: none; margin-top: 28px; }
+  .results.show { display: block; }
+
+  .meta-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--border-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .meta-cell {
+    background: var(--panel);
+    padding: 14px 16px;
+  }
+  .meta-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 6px;
+  }
+  .meta-value {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text);
+  }
+  .meta-value.amber { color: var(--amber); }
+  .meta-value.green { color: var(--green); }
+
+  .crs-note {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    padding: 12px 14px;
+    border-left: 2px solid var(--amber-dim);
+    background: rgba(217, 164, 65, 0.06);
+    margin-bottom: 20px;
+  }
+  .crs-note.warn { border-left-color: var(--text-faint); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    margin-bottom: 22px;
+  }
+  thead th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 10.5px;
+    padding: 0 10px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  tbody td:first-child { color: var(--text); }
+  tbody tr:last-child td { border-bottom: none; }
+  .table-scroll { max-height: 260px; overflow-y: auto; border: 1px solid var(--border-soft); border-radius: 8px; }
+  .table-scroll table { margin-bottom: 0; }
+  .table-scroll thead { position: sticky; top: 0; background: var(--panel); }
+  .more-rows {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-faint);
+    text-align: center;
+    padding: 10px;
+  }
+
+  .actions { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+  button.primary {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: #14171a;
+    background: var(--amber);
+    border: none;
+    border-radius: 7px;
+    padding: 13px 22px;
+    cursor: pointer;
+    transition: background .15s ease, transform .1s ease;
+  }
+  button.primary:hover { background: #e6b455; }
+  button.primary:active { transform: scale(0.98); }
+  button.ghost {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 12px 18px;
+    cursor: pointer;
+  }
+  button.ghost:hover { border-color: var(--text-faint); color: var(--text); }
+
+  footer {
+    margin-top: 48px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+
+  .home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    text-decoration: none;
+    margin-bottom: 28px;
+    padding: 7px 12px 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color .15s ease, color .15s ease;
+  }
+  .home-link:hover { border-color: var(--amber-dim); color: var(--amber); }
+  .home-link svg { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="home-link" href="https://jonasbratland.com">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    jonasbratland.com
+  </a>
+
+  <div class="eyebrow">Klientside verktøy</div>
+  <h1>KOF <span>→</span> GeoJSON</h1>
+  <p class="sub">Last opp en KOF-fil (Koordinatformat). Konvertering skjer lokalt i nettleseren — ingenting sendes til noen server. Resultatet kan dras rett inn i QGIS.</p>
+
+  <label class="dropzone" id="dropzone">
+    <input type="file" id="fileInput" accept=".kof,.txt">
+    <div class="reticle"><div class="reticle-circle"></div></div>
+    <div class="drop-title">Slipp KOF-fil her, eller klikk for å velge</div>
+    <div class="drop-sub">.kof / .txt</div>
+    <div class="drop-filename" id="filename"></div>
+  </label>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="results" id="results">
+
+    <div class="meta-strip">
+      <div class="meta-cell">
+        <div class="meta-label">Punkter</div>
+        <div class="meta-value amber" id="metaPoints">0</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Streker</div>
+        <div class="meta-value" id="metaLines">0</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Projeksjon</div>
+        <div class="meta-value" id="metaEpsg">—</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Avviste linjer</div>
+        <div class="meta-value" id="metaErrors">0</div>
+      </div>
+    </div>
+
+    <div class="crs-note" id="crsNote"></div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Nord (Y)</th><th>Øst (X)</th><th>Høyde</th></tr>
+        </thead>
+        <tbody id="previewBody"></tbody>
+      </table>
+    </div>
+    <div class="more-rows" id="moreRows"></div>
+
+    <div class="actions">
+      <button class="primary" id="downloadBtn">Last ned GeoJSON</button>
+      <button class="ghost" id="resetBtn">Start på nytt</button>
+    </div>
+  </div>
+
+  <footer>
+    Punktnummer og høyde beholdes som attributter. Koordinater eksporteres uendret (rå UTM-verdier), som [Øst, Nord] — standard GIS-rekkefølge (X, Y).<br>
+    Finner filen en «Projeksjon:»-linje med EUREF89 UTM-sone 32/33/35, settes CRS automatisk i GeoJSON-en (EPSG 25832/25833/25835).
+  </footer>
+
+</div>
+
+<script>
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const filenameEl = document.getElementById('filename');
+  const errorBox = document.getElementById('errorBox');
+  const results = document.getElementById('results');
+  const previewBody = document.getElementById('previewBody');
+  const moreRows = document.getElementById('moreRows');
+  const crsNote = document.getElementById('crsNote');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  let currentGeoJSON = null;
+  let currentBaseName = 'output';
+
+  const EPSG_MAP = { '32': '25832', '33': '25833', '35': '25835' };
+
+  function parseKOF(text) {
+    const lines = text.split(/\r?\n/);
+    let epsg = null;
+    let projectionRaw = null;
+    const points = [];
+    const lineFeatures = [];
+    const errors = [];
+    let currentLine = null;
+
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) continue;
+      const parts = line.split(/\s+/);
+      const tag = parts[0];
+
+      if (tag === '00') {
+        const rest = line.slice(2).trim();
+        const m = rest.match(/Projeksjon:\s*(.+)/i);
+        if (m) {
+          projectionRaw = m[1].trim();
+          const zoneMatch = projectionRaw.match(/UTM\s*(\d{2})/i);
+          const isEUREF89 = /EUREF89/i.test(projectionRaw);
+          if (zoneMatch && isEUREF89 && EPSG_MAP[zoneMatch[1]]) {
+            epsg = EPSG_MAP[zoneMatch[1]];
+          }
+        }
+        continue;
+      }
+
+      if (tag === '09') {
+        currentLine = { id: parts[1] || null, points: [] };
+        continue;
+      }
+
+      if (tag === '91') {
+        if (currentLine && currentLine.points.length > 0) {
+          lineFeatures.push(currentLine);
+        }
+        currentLine = null;
+        continue;
+      }
+
+      if (tag === '05') {
+        if (parts.length < 4) {
+          errors.push(line);
+          continue;
+        }
+        const id = parts[1];
+        const north = parseFloat(parts[2]);
+        const east = parseFloat(parts[3]);
+        const z = parts.length > 4 && !isNaN(parseFloat(parts[4])) ? parseFloat(parts[4]) : null;
+        if (isNaN(north) || isNaN(east)) {
+          errors.push(line);
+          continue;
+        }
+        const pt = { id, north, east, z };
+        if (currentLine) {
+          currentLine.points.push(pt);
+        } else {
+          points.push(pt);
+        }
+        continue;
+      }
+      // Other KOF codes (e.g. 10, 14 instrument/station lines) are ignored —
+      // this tool only extracts coordinate geometry.
+    }
+
+    return { points, lineFeatures, epsg, projectionRaw, errors };
+  }
+
+  function toGeoJSON(parsed) {
+    const features = [];
+
+    for (const p of parsed.points) {
+      const coords = p.z !== null ? [p.east, p.north, p.z] : [p.east, p.north];
+      features.push({
+        type: 'Feature',
+        properties: { id: p.id, z: p.z },
+        geometry: { type: 'Point', coordinates: coords }
+      });
+    }
+
+    for (const lf of parsed.lineFeatures) {
+      const coords = lf.points.map(p => p.z !== null ? [p.east, p.north, p.z] : [p.east, p.north]);
+      features.push({
+        type: 'Feature',
+        properties: { id: lf.id },
+        geometry: { type: 'LineString', coordinates: coords }
+      });
+    }
+
+    const geojson = { type: 'FeatureCollection', features };
+    if (parsed.epsg) {
+      geojson.crs = {
+        type: 'name',
+        properties: { name: `urn:ogc:def:crs:EPSG::${parsed.epsg}` }
+      };
+    }
+    return geojson;
+  }
+
+  function renderResults(parsed) {
+    document.getElementById('metaPoints').textContent = parsed.points.length;
+    document.getElementById('metaLines').textContent = parsed.lineFeatures.length;
+    document.getElementById('metaErrors').textContent = parsed.errors.length;
+    document.getElementById('metaEpsg').textContent = parsed.epsg ? `EPSG:${parsed.epsg}` : '—';
+
+    if (parsed.epsg) {
+      crsNote.classList.remove('warn');
+      crsNote.textContent = `Oppdaget "${parsed.projectionRaw}" i filen → CRS satt automatisk til EPSG:${parsed.epsg}. QGIS bør sette riktig prosjeksjon uten at du gjør noe.`;
+    } else {
+      crsNote.classList.add('warn');
+      crsNote.textContent = parsed.projectionRaw
+        ? `Fant projeksjonen "${parsed.projectionRaw}" i filen, men kjente den ikke igjen automatisk. Sett CRS manuelt i QGIS ved import.`
+        : `Fant ingen projeksjonsinfo i filen. Koordinatene eksporteres uendret — sett riktig CRS manuelt i QGIS ved import.`;
+    }
+
+    previewBody.innerHTML = '';
+    const preview = parsed.points.slice(0, 12);
+    for (const p of preview) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${p.id}</td><td>${p.north.toFixed(3)}</td><td>${p.east.toFixed(3)}</td><td>${p.z !== null ? p.z.toFixed(3) : '—'}</td>`;
+      previewBody.appendChild(tr);
+    }
+    moreRows.textContent = parsed.points.length > 12 ? `+ ${parsed.points.length - 12} punkter til` : '';
+
+    if (parsed.errors.length > 0) {
+      errorBox.classList.add('show');
+      errorBox.innerHTML = `<strong>${parsed.errors.length} linje(r) kunne ikke tolkes</strong> og ble hoppet over:<br>` +
+        parsed.errors.slice(0, 5).map(l => `→ ${l}`).join('<br>') +
+        (parsed.errors.length > 5 ? `<br>… og ${parsed.errors.length - 5} til` : '');
+    } else {
+      errorBox.classList.remove('show');
+      errorBox.innerHTML = '';
+    }
+
+    results.classList.add('show');
+  }
+
+  function handleFile(file) {
+    filenameEl.textContent = file.name;
+    currentBaseName = file.name.replace(/\.[^.]+$/, '') || 'output';
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = parseKOF(e.target.result);
+        if (parsed.points.length === 0 && parsed.lineFeatures.length === 0) {
+          errorBox.classList.add('show');
+          errorBox.innerHTML = `<strong>Fant ingen punkter</strong> i denne filen. Sjekk at det faktisk er en KOF-fil med 05-koder.`;
+          results.classList.remove('show');
+          return;
+        }
+        currentGeoJSON = toGeoJSON(parsed);
+        renderResults(parsed);
+      } catch (err) {
+        errorBox.classList.add('show');
+        errorBox.innerHTML = `<strong>Klarte ikke å lese filen.</strong> ${err.message}`;
+        results.classList.remove('show');
+      }
+    };
+    reader.onerror = () => {
+      errorBox.classList.add('show');
+      errorBox.innerHTML = `<strong>Klarte ikke å lese filen.</strong>`;
+    };
+    reader.readAsText(file);
+  }
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!currentGeoJSON) return;
+    const blob = new Blob([JSON.stringify(currentGeoJSON, null, 2)], { type: 'application/geo+json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentBaseName}.geojson`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  resetBtn.addEventListener('click', () => {
+    currentGeoJSON = null;
+    fileInput.value = '';
+    filenameEl.textContent = '';
+    results.classList.remove('show');
+    errorBox.classList.remove('show');
+  });
+</script>
+</body>
+</html>
