@@ -51,8 +51,8 @@ table {
 | [Github][GH]        | [ChatGPT][GPT] | [FMHY][FMHY]         | [Youtube][YT]   | [GG.deals][GG]    |
 | [Canvas][nmbu]      | [Earth][earth] | [1337x][1337x]       | [Jellyfin][JF]  | [AliExpress][ali] |
 | [NRK][nrk]          | [PDF][pdf]     | [Rastastugan][RAST]  | [NRK TV][nrktv] | [Jula][jula]      |
-| [IMDB][imdb]        |                | [ext.to][ext]        | [TV2][tv2]      | [Komplett][kom]   |
-|                     |                |                      | [Max][max]      | [Prisjakt][pris]  |
+| [IMDB][imdb]        | [Claude][CAI]  | [ext.to][ext]        | [TV2][tv2]      | [Komplett][kom]   |
+|                     |                | [Torbox][TB]         | [Max][max]      | [Prisjakt][pris]  |
 
 
 [GH]: https://github.com/Kabax04
@@ -63,11 +63,13 @@ table {
 [GPT]: https://chat.openai.com/
 [earth]: https://earth.google.com/web/
 [pdf]: https://ilovepdf.com/
+[CAI]: https://claude.ai/
 
 [FMHY]: https://fmhy.net/
-[1337x]: https://1337x.to/home
+[1337x]: https://1337x.to/home/
 [RAST]: https://rastastugan.org/
 [ext]: https://ext.to/
+[TB]: https://torbox.app/dashboard
 
 [YT]: https://www.youtube.com/
 [JF]: http://localhost:8096/
