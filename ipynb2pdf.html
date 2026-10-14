@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ipynb → PDF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1b;--muted:#6b6b66;--line:#e2e2dc;--accent:#2f6f4f;--code:#f3f3ef;--err:#fbeaea}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#1f1f1d;--text:#ecece6;--muted:#9a9a92;--line:#33332f;--accent:#6cc08f;--code:#262624;--err:#3a2222}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+.home{display:inline-block;margin-bottom:16px;color:var(--accent);text-decoration:none;font-size:.9rem}
+.home:hover{text-decoration:underline}
+h1{font-size:1.6rem;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 24px}
+#drop{border:2px dashed var(--line);border-radius:12px;background:var(--card);padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
+#drop.over,#drop:hover{border-color:var(--accent)}
+#drop b{color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0}
+.bar span{color:var(--muted);flex:1;min-width:160px}
+button{font:inherit;border:0;border-radius:8px;padding:9px 16px;background:var(--accent);color:#fff;cursor:pointer}
+button.alt{background:transparent;color:var(--text);border:1px solid var(--line)}
+button:disabled{opacity:.4;cursor:default}
+label.opt{color:var(--muted);font-size:.9rem;display:flex;gap:6px;align-items:center}
+#msg{color:#b3261e;margin-top:12px}
+#nb{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px}
+.cell{margin:0 0 18px}
+.code pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow-x:auto;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.code pre code{background:none;padding:0}
+.out{margin:6px 0 0 0}
+.out pre{margin:0;padding:6px 12px;font:12.5px/1.4 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.out.err pre{background:var(--err);border-radius:6px}
+.out img,.out svg{max-width:100%;height:auto}
+.out table{border-collapse:collapse;font-size:.85rem;display:block;overflow-x:auto}
+.out th,.out td{border:1px solid var(--line);padding:3px 8px;text-align:right}
+.md img{max-width:100%}
+.md table{border-collapse:collapse}.md th,.md td{border:1px solid var(--line);padding:4px 8px}
+.md pre{background:var(--code);padding:10px;border-radius:6px;overflow-x:auto}
+.md code{background:var(--code);padding:1px 4px;border-radius:4px}.md pre code{padding:0}
+.md blockquote{margin:0;padding-left:14px;border-left:3px solid var(--line);color:var(--muted)}
+@media print{
+  @page{margin:16mm}
+  body{background:#fff;color:#000;font-size:11pt}
+  main{max-width:none;padding:0}
+  .ui{display:none!important}
+  #nb{border:0;padding:0;background:#fff}
+  .cell,.out img,.out svg,.out table{break-inside:avoid}
+  .code pre,.out pre{overflow:visible}
+  .nocode .code{display:none}
+  .noout .out{display:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="ui">
+    <a class="home" href="https://jonasbratland.com/">← Back to jonasbratland.com</a>
+    <h1>ipynb → PDF</h1>
+    <p class="sub">Your file is read locally in your browser and is never uploaded anywhere.</p>
+    <div id="drop" tabindex="0"><b>Choose an .ipynb file</b> or drag it here</div>
+    <input id="file" type="file" accept=".ipynb,application/json" hidden>
+    <div id="msg"></div>
+    <div class="bar">
+      <span id="name">No file selected</span>
+      <label class="opt"><input type="checkbox" id="hideCode"> Hide code</label>
+      <label class="opt"><input type="checkbox" id="hideOut"> Hide output</label>
+      <button id="pdf" disabled>Create PDF</button>
+      <button id="clear" class="alt" disabled>Reset</button>
+    </div>
+    <p class="sub" style="font-size:.85rem">Click “Create PDF”, then choose “Save as PDF” as the destination in the print dialog.</p>
+  </div>
+  <div id="nb" hidden></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const drop = $('drop'), fileIn = $('file'), nb = $('nb'), msg = $('msg');
+const src = s => Array.isArray(s) ? s.join('') : (s || '');
+const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const stripAnsi = s => s.replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
+let title = 'notebook';
+
+function renderMath(tex, display) {
+  try { return katex.renderToString(tex, {displayMode: display, throwOnError: false}); }
+  catch { return esc(tex); }
+}
+
+function renderMarkdown(text) {
+  const store = [];
+  const keep = (tex, d) => { store.push(renderMath(tex, d)); return `@@M${store.length - 1}@@`; };
+  text = text.replace(/\$\$([\s\S]+?)\$\$/g, (_, t) => keep(t, true))
+             .replace(/(?<![\\$])\$([^\n$]+?)\$/g, (_, t) => keep(t, false));
+  let html = marked.parse(text);
+  html = DOMPurify.sanitize(html);
+  return html.replace(/@@M(\d+)@@/g, (_, i) => store[i]);
+}
+
+function outputEl(o, lang) {
+  const d = document.createElement('div');
+  d.className = 'out';
+  const t = o.output_type;
+  if (t === 'stream') {
+    d.innerHTML = `<pre>${esc(src(o.text))}</pre>`;
+  } else if (t === 'error') {
+    d.classList.add('err');
+    d.innerHTML = `<pre>${esc(stripAnsi((o.traceback || []).join('\n') || `${o.ename}: ${o.evalue}`))}</pre>`;
+  } else if (t === 'execute_result' || t === 'display_data') {
+    const m = o.data || {};
+    if (m['image/png'])       d.innerHTML = `<img alt="" src="data:image/png;base64,${src(m['image/png']).replace(/\s/g,'')}">`;
+    else if (m['image/jpeg']) d.innerHTML = `<img alt="" src="data:image/jpeg;base64,${src(m['image/jpeg']).replace(/\s/g,'')}">`;
+    else if (m['image/svg+xml']) d.innerHTML = DOMPurify.sanitize(src(m['image/svg+xml']), {USE_PROFILES: {svg: true, svgFilters: true}});
+    else if (m['text/html'])  d.innerHTML = DOMPurify.sanitize(src(m['text/html']));
+    else if (m['text/latex']) d.innerHTML = renderMath(src(m['text/latex']).replace(/^\$\$?|\$\$?$/g, ''), true);
+    else if (m['text/plain']) d.innerHTML = `<pre>${esc(src(m['text/plain']))}</pre>`;
+    else return null;
+  } else return null;
+  return d;
+}
+
+function render(json) {
+  const cells = json.cells || (json.worksheets && json.worksheets[0].cells);
+  if (!cells) throw new Error('No cells found in the file.');
+  const lang = (json.metadata?.language_info?.name || json.metadata?.kernelspec?.language || 'python').toLowerCase();
+  nb.innerHTML = '';
+  for (const c of cells) {
+    const text = src(c.source ?? c.input);
+    const div = document.createElement('div');
+    div.className = 'cell';
+    if (c.cell_type === 'markdown') {
+      div.classList.add('md');
+      div.innerHTML = renderMarkdown(text);
+    } else if (c.cell_type === 'code') {
+      const wrap = document.createElement('div');
+      wrap.className = 'code';
+      let h;
+      try { h = hljs.getLanguage(lang) ? hljs.highlight(text, {language: lang}).value : esc(text); }
+      catch { h = esc(text); }
+      wrap.innerHTML = `<pre><code class="hljs">${h}</code></pre>`;
+      div.appendChild(wrap);
+      for (const o of (c.outputs || [])) { const e = outputEl(o, lang); if (e) div.appendChild(e); }
+    } else if (c.cell_type === 'raw') {
+      div.innerHTML = `<pre>${esc(text)}</pre>`;
+    } else continue;
+    nb.appendChild(div);
+  }
+  nb.hidden = false;
+}
+
+function load(file) {
+  msg.textContent = '';
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      render(JSON.parse(r.result));
+      title = file.name.replace(/\.ipynb$/i, '');
+      $('name').textContent = file.name;
+      $('pdf').disabled = $('clear').disabled = false;
+    } catch (e) {
+      msg.textContent = 'Could not read the file: ' + e.message;
+    }
+  };
+  r.onerror = () => msg.textContent = 'Could not read the file.';
+  r.readAsText(file);
+}
+
+drop.onclick = () => fileIn.click();
+drop.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') fileIn.click(); };
+fileIn.onchange = () => load(fileIn.files[0]);
+drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
+drop.ondragleave = () => drop.classList.remove('over');
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); load(e.dataTransfer.files[0]); };
+
+$('hideCode').onchange = e => nb.classList.toggle('nocode', e.target.checked);
+$('hideOut').onchange = e => nb.classList.toggle('noout', e.target.checked);
+$('pdf').onclick = () => {
+  const old = document.title;
+  document.title = title;          // suggested file name for the PDF
+  window.print();
+  document.title = old;
+};
+$('clear').onclick = () => {
+  nb.innerHTML = ''; nb.hidden = true; fileIn.value = '';
+  $('name').textContent = 'No file selected';
+  $('pdf').disabled = $('clear').disabled = true;
+};
+</script>
+</body>
+</html>
