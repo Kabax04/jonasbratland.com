@@ -14,6 +14,8 @@
 
 [Konverter .kof til .geojson](kof2geojson.html)
 
+[Konverter .ipynb til .pdf](ipynb2pdf.html)
+
 ### Other
 
 [Github](https://github.com/Kabax04/jonasbratland.com)
