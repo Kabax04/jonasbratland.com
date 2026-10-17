@@ -4,6 +4,10 @@
 
 ---
 
+*Kunnskap er bortkastet hvis den ikke deles.*
+
+---
+
 ### Latest posts
 
 [Split FLAC CUE files with foobar2000](blog/splitflacfoobar.md)
@@ -23,5 +27,3 @@
 [Nyttige WMS-tjenester](wmstjenester.md)
 
 [Tromsø Lufthavn - Studieprosjekt](tromso/index.html)
-
-(this website is under construction)

@@ -4,4 +4,8 @@
 
 ---
 
-(under construction)
+Jonas Bratland
+
+Student at NMBU, Geomatics
+
+Competance in GIS, Surveying, Remote Sensing, and Geospatial Data Analysis
