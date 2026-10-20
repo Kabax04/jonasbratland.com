@@ -10,6 +10,8 @@
 
 ### Latest posts
 
+[Jonas' signaturspaghetti](blog/onepotspaghetti.md)
+
 [Split FLAC CUE files with foobar2000](blog/splitflacfoobar.md)
 
 ### Tools
