@@ -56,7 +56,7 @@ table {
 
 
 [GH]: https://github.com/Kabax04
-[nmbu]: https://nmbu.instructure.com/
+[nmbu]: https://nmbu.instructure.com/login/saml
 [nrk]: https://www.nrk.no/
 [imdb]: https://www.imdb.com/
 
