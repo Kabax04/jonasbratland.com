@@ -1,0 +1,13 @@
+{% comment %}
+  Liste over alle verktøy (alle filer i tools/), sortert etter tittel.
+  Bruk:  {% include tool-list.html %}
+{% endcomment %}
+{% assign tools = site.pages | where_exp: "p", "p.dir == '/tools/'" | sort: "title" %}
+<ul class="tool-list">
+  {% for tool in tools %}
+  <li>
+    <a href="{{ tool.url | relative_url }}">{{ tool.title }}</a>
+    {% if tool.description %}<p>{{ tool.description }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>

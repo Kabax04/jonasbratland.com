@@ -10,19 +10,21 @@ _config.yml           Innstillinger: tittel, e-post, slagord osv.
 _data/navigation.yml  Menyen øverst på siden
 _layouts/default.html Grunnmalen alle sider bygger på (header, meny, footer)
 _layouts/post.html    Mal for blogginnlegg (tittel, dato, «tilbake»-lenke)
+_layouts/tool.html    Mal for verktøy (tittel, beskrivelse, «tilbake»-lenke)
 _includes/post-list.html  Listen over blogginnlegg
+_includes/tool-list.html  Listen over verktøy
 assets/css/style.css  All styling. Fargene står øverst.
 
 index.md              Forsiden
 blogg.md              Oversikt over alle blogginnlegg (lages automatisk)
-verktoy.md            Oversikt over verktøy
+verktoy.md            Oversikt over verktøy (lages automatisk)
 prosjekter.md         Oversikt over prosjekter
 om.md                 Om meg + kontakt
 wmstjenester.md       Liste over WMS-tjenester
 startpage.md          Startsiden min i nettleseren (ikke i menyen)
 
 blog/                 Blogginnlegg, én .md-fil per innlegg
-tools/, *.html        Frittstående verktøy (vanlig HTML, ikke påvirket av malen)
+tools/                Verktøy, én .html-fil per verktøy
 tromso/               Kartprosjekt eksportert fra QGIS
 img/                  Bilder
 ```
@@ -83,11 +85,48 @@ Du kan lenke til `.md`-filer akkurat som før, og GitHub Pages gjør dem om til 
 - **Tittel, slagord, e-post:** `_config.yml`.
 - **Header og footer:** `_layouts/default.html`.
 
+## Lage et nytt verktøy
+
+Et verktøy er én `.html`-fil i `tools/` med HTML, litt CSS og JavaScript.
+Øverst står den samme typen `---`-blokk som på vanlige sider:
+
+```html
+---
+title: Mitt verktøy
+description: Én setning som vises i verktøylisten og under tittelen.
+---
+
+<div class="dropzone">...</div>
+<button class="btn">Kjør</button>
+
+<script>
+  // JavaScript her
+</script>
+```
+
+Menyen, tittelen og «← Alle verktøy» kommer automatisk, og verktøyet dukker opp
+på forsiden og under **Verktøy**. Se på de som finnes for eksempler.
+
+Ferdige byggeklosser i `assets/css/style.css`, så verktøyene ser like ut:
+
+| Klasse | Hva |
+| --- | --- |
+| `btn`, `btn secondary` | Knapp (grønn / omriss) |
+| `actions` | Rad med knapper |
+| `dropzone` | Felt for å slippe eller velge en fil |
+| `form`, `field`, `choices` | Skjema med etikett + felt, radioknapper |
+| `result` | Stort, grønt resultat |
+| `stats` | Rad med nøkkeltall |
+| `note`, `error`, `small` | Infoboks, feilmelding, dempet tekst |
+| `table-scroll` | Tabell som kan scrolles |
+
+Har du flyttet en side, kan du legge til `redirect_from: /gammel-adresse.html`
+i `---`-blokken, så sendes gamle lenker videre.
+
 ## Frittstående HTML-sider
 
-Filer som `kof2geojson.html` og alt i `tromso/` har ingen `---`-blokk øverst.
-Da lar GitHub Pages dem være helt i fred, så de får ikke menyen eller stilen fra resten av siden.
-Det er med vilje, siden de har sin egen design.
+Alt i `tromso/` har ingen `---`-blokk øverst. Da lar GitHub Pages filene være helt i fred,
+så de får ikke menyen eller stilen fra resten av siden. Det er med vilje, siden kartet har sin egen design.
 
 ## Forhåndsvise på egen PC (valgfritt)
 

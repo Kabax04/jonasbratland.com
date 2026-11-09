@@ -1,0 +1,270 @@
+---
+title: KOF → GeoJSON
+description: Gjør om en KOF-fil (koordinatformat) til GeoJSON som kan dras rett inn i QGIS. Alt skjer lokalt i nettleseren, ingenting sendes til noen server.
+redirect_from: /kof2geojson.html
+---
+
+<label class="dropzone" id="dropzone">
+  <input type="file" id="fileInput" accept=".kof,.txt">
+  <strong>Slipp KOF-fil her</strong>, eller klikk for å velge
+  <small>.kof / .txt</small>
+  <div class="file" id="filename"></div>
+</label>
+
+<div class="error" id="errorBox" hidden></div>
+
+<div id="results" hidden>
+  <div class="stats">
+    <div><span>Punkter</span><b id="metaPoints">0</b></div>
+    <div><span>Streker</span><b id="metaLines">0</b></div>
+    <div><span>Projeksjon</span><b id="metaEpsg">—</b></div>
+    <div><span>Avviste linjer</span><b id="metaErrors">0</b></div>
+  </div>
+
+  <p class="note" id="crsNote"></p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Nord (Y)</th><th>Øst (X)</th><th>Høyde</th></tr>
+      </thead>
+      <tbody id="previewBody"></tbody>
+    </table>
+  </div>
+  <p class="small" id="moreRows"></p>
+
+  <div class="actions">
+    <button class="btn" id="downloadBtn">Last ned GeoJSON</button>
+    <button class="btn secondary" id="resetBtn">Start på nytt</button>
+  </div>
+</div>
+
+<h2>Slik fungerer det</h2>
+
+<p class="small">
+  Punktnummer og høyde beholdes som attributter. Koordinater eksporteres uendret (rå UTM-verdier),
+  som [Øst, Nord], altså standard GIS-rekkefølge (X, Y).
+  Finner filen en «Projeksjon:»-linje med EUREF89 UTM-sone 32/33/35, settes CRS automatisk
+  i GeoJSON-en (EPSG 25832/25833/25835).
+</p>
+
+<script>
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const filenameEl = document.getElementById('filename');
+  const errorBox = document.getElementById('errorBox');
+  const results = document.getElementById('results');
+  const previewBody = document.getElementById('previewBody');
+  const moreRows = document.getElementById('moreRows');
+  const crsNote = document.getElementById('crsNote');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  let currentGeoJSON = null;
+  let currentBaseName = 'output';
+
+  const EPSG_MAP = { '32': '25832', '33': '25833', '35': '25835' };
+
+  function showError(html) {
+    errorBox.innerHTML = html;
+    errorBox.hidden = false;
+  }
+
+  function hideError() {
+    errorBox.innerHTML = '';
+    errorBox.hidden = true;
+  }
+
+  // Leser KOF-teksten og plukker ut punkter (05) og streker (09 ... 91)
+  function parseKOF(text) {
+    const lines = text.split(/\r?\n/);
+    let epsg = null;
+    let projectionRaw = null;
+    const points = [];
+    const lineFeatures = [];
+    const errors = [];
+    let currentLine = null;
+
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) continue;
+      const parts = line.split(/\s+/);
+      const tag = parts[0];
+
+      if (tag === '00') {
+        const rest = line.slice(2).trim();
+        const m = rest.match(/Projeksjon:\s*(.+)/i);
+        if (m) {
+          projectionRaw = m[1].trim();
+          const zoneMatch = projectionRaw.match(/UTM\s*(\d{2})/i);
+          const isEUREF89 = /EUREF89/i.test(projectionRaw);
+          if (zoneMatch && isEUREF89 && EPSG_MAP[zoneMatch[1]]) {
+            epsg = EPSG_MAP[zoneMatch[1]];
+          }
+        }
+        continue;
+      }
+
+      if (tag === '09') {
+        currentLine = { id: parts[1] || null, points: [] };
+        continue;
+      }
+
+      if (tag === '91') {
+        if (currentLine && currentLine.points.length > 0) {
+          lineFeatures.push(currentLine);
+        }
+        currentLine = null;
+        continue;
+      }
+
+      if (tag === '05') {
+        if (parts.length < 4) {
+          errors.push(line);
+          continue;
+        }
+        const id = parts[1];
+        const north = parseFloat(parts[2]);
+        const east = parseFloat(parts[3]);
+        const z = parts.length > 4 && !isNaN(parseFloat(parts[4])) ? parseFloat(parts[4]) : null;
+        if (isNaN(north) || isNaN(east)) {
+          errors.push(line);
+          continue;
+        }
+        const pt = { id, north, east, z };
+        if (currentLine) {
+          currentLine.points.push(pt);
+        } else {
+          points.push(pt);
+        }
+        continue;
+      }
+      // Andre KOF-koder (f.eks. 10, 14 instrument/stasjon) ignoreres,
+      // verktøyet henter bare ut koordinatgeometri.
+    }
+
+    return { points, lineFeatures, epsg, projectionRaw, errors };
+  }
+
+  function toGeoJSON(parsed) {
+    const features = [];
+
+    for (const p of parsed.points) {
+      const coords = p.z !== null ? [p.east, p.north, p.z] : [p.east, p.north];
+      features.push({
+        type: 'Feature',
+        properties: { id: p.id, z: p.z },
+        geometry: { type: 'Point', coordinates: coords }
+      });
+    }
+
+    for (const lf of parsed.lineFeatures) {
+      const coords = lf.points.map(p => p.z !== null ? [p.east, p.north, p.z] : [p.east, p.north]);
+      features.push({
+        type: 'Feature',
+        properties: { id: lf.id },
+        geometry: { type: 'LineString', coordinates: coords }
+      });
+    }
+
+    const geojson = { type: 'FeatureCollection', features };
+    if (parsed.epsg) {
+      geojson.crs = {
+        type: 'name',
+        properties: { name: `urn:ogc:def:crs:EPSG::${parsed.epsg}` }
+      };
+    }
+    return geojson;
+  }
+
+  function renderResults(parsed) {
+    document.getElementById('metaPoints').textContent = parsed.points.length;
+    document.getElementById('metaLines').textContent = parsed.lineFeatures.length;
+    document.getElementById('metaErrors').textContent = parsed.errors.length;
+    document.getElementById('metaEpsg').textContent = parsed.epsg ? `EPSG:${parsed.epsg}` : '—';
+
+    if (parsed.epsg) {
+      crsNote.classList.remove('warn');
+      crsNote.textContent = `Oppdaget "${parsed.projectionRaw}" i filen → CRS satt automatisk til EPSG:${parsed.epsg}. QGIS bør sette riktig projeksjon uten at du gjør noe.`;
+    } else {
+      crsNote.classList.add('warn');
+      crsNote.textContent = parsed.projectionRaw
+        ? `Fant projeksjonen "${parsed.projectionRaw}" i filen, men kjente den ikke igjen automatisk. Sett CRS manuelt i QGIS ved import.`
+        : `Fant ingen projeksjonsinfo i filen. Koordinatene eksporteres uendret, så sett riktig CRS manuelt i QGIS ved import.`;
+    }
+
+    previewBody.innerHTML = '';
+    const preview = parsed.points.slice(0, 12);
+    for (const p of preview) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${p.id}</td><td>${p.north.toFixed(3)}</td><td>${p.east.toFixed(3)}</td><td>${p.z !== null ? p.z.toFixed(3) : '—'}</td>`;
+      previewBody.appendChild(tr);
+    }
+    moreRows.textContent = parsed.points.length > 12 ? `+ ${parsed.points.length - 12} punkter til` : '';
+
+    if (parsed.errors.length > 0) {
+      showError(`<strong>${parsed.errors.length} linje(r) kunne ikke tolkes</strong> og ble hoppet over:<br>` +
+        parsed.errors.slice(0, 5).map(l => `→ ${l}`).join('<br>') +
+        (parsed.errors.length > 5 ? `<br>… og ${parsed.errors.length - 5} til` : ''));
+    } else {
+      hideError();
+    }
+
+    results.hidden = false;
+  }
+
+  function handleFile(file) {
+    filenameEl.textContent = file.name;
+    currentBaseName = file.name.replace(/\.[^.]+$/, '') || 'output';
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = parseKOF(e.target.result);
+        if (parsed.points.length === 0 && parsed.lineFeatures.length === 0) {
+          showError(`<strong>Fant ingen punkter</strong> i denne filen. Sjekk at det faktisk er en KOF-fil med 05-koder.`);
+          results.hidden = true;
+          return;
+        }
+        currentGeoJSON = toGeoJSON(parsed);
+        renderResults(parsed);
+      } catch (err) {
+        showError(`<strong>Klarte ikke å lese filen.</strong> ${err.message}`);
+        results.hidden = true;
+      }
+    };
+    reader.onerror = () => showError(`<strong>Klarte ikke å lese filen.</strong>`);
+    reader.readAsText(file);
+  }
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('over'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('over');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!currentGeoJSON) return;
+    const blob = new Blob([JSON.stringify(currentGeoJSON, null, 2)], { type: 'application/geo+json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentBaseName}.geojson`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  resetBtn.addEventListener('click', () => {
+    currentGeoJSON = null;
+    fileInput.value = '';
+    filenameEl.textContent = '';
+    results.hidden = true;
+    hideError();
+  });
+</script>

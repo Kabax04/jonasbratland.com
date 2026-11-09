@@ -11,6 +11,7 @@ gem "bigdecimal"
 
 group :jekyll_plugins do
   gem "jekyll-relative-links"     # gjør [lenke](side.md) om til side.html
+  gem "jekyll-redirect-from"      # redirect_from: i front matter
 end
 
 gem "tzinfo-data", platforms: [:windows]

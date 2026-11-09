@@ -1,0 +1,10 @@
+---
+layout: default
+---
+<!-- Mal for verktøy (alle filer i tools/). Bygger på default.html. -->
+<div class="tool-head">
+  <p class="back"><a href="{{ '/verktoy.html' | relative_url }}">← Alle verktøy</a></p>
+  <h1>{{ page.title }}</h1>
+  {% if page.description %}<p class="lead">{{ page.description }}</p>{% endif %}
+</div>
+{{ content }}
