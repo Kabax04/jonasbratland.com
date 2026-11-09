@@ -16,8 +16,4 @@ Jeg studerer geomatikk ved NMBU. Her samler jeg små verktøy jeg har laget, pro
 
 ## Verktøy
 
-- [T-verdi kalkulator](tools/tverdi.html)
-- [Konverter .kof til .geojson](kof2geojson.html)
-- [Konverter .ipynb til .pdf](ipynb2pdf.html)
-
-[Mer om verktøyene →](verktoy.md)
+{% include tool-list.html %}

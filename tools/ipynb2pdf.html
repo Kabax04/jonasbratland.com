@@ -1,80 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ipynb → PDF</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+---
+title: ipynb → PDF
+description: Gjør en Jupyter Notebook om til en pen PDF. Filen leses lokalt i nettleseren og lastes aldri opp noe sted.
+redirect_from: /ipynb2pdf.html
+---
+
+<!-- Kodefarger: mørke på skjermen, lyse på utskrift -->
+<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" media="print" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+
 <style>
-:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1b;--muted:#6b6b66;--line:#e2e2dc;--accent:#2f6f4f;--code:#f3f3ef;--err:#fbeaea}
-@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#1f1f1d;--text:#ecece6;--muted:#9a9a92;--line:#33332f;--accent:#6cc08f;--code:#262624;--err:#3a2222}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:860px;margin:0 auto;padding:32px 20px 64px}
-.home{display:inline-block;margin-bottom:16px;color:var(--accent);text-decoration:none;font-size:.9rem}
-.home:hover{text-decoration:underline}
-h1{font-size:1.6rem;margin:0 0 4px}
-.sub{color:var(--muted);margin:0 0 24px}
-#drop{border:2px dashed var(--line);border-radius:12px;background:var(--card);padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
-#drop.over,#drop:hover{border-color:var(--accent)}
-#drop b{color:var(--accent)}
-.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0}
-.bar span{color:var(--muted);flex:1;min-width:160px}
-button{font:inherit;border:0;border-radius:8px;padding:9px 16px;background:var(--accent);color:#fff;cursor:pointer}
-button.alt{background:transparent;color:var(--text);border:1px solid var(--line)}
-button:disabled{opacity:.4;cursor:default}
-label.opt{color:var(--muted);font-size:.9rem;display:flex;gap:6px;align-items:center}
-#msg{color:#b3261e;margin-top:12px}
-#nb{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px}
-.cell{margin:0 0 18px}
-.code pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow-x:auto;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
-.code pre code{background:none;padding:0}
-.out{margin:6px 0 0 0}
-.out pre{margin:0;padding:6px 12px;font:12.5px/1.4 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
-.out.err pre{background:var(--err);border-radius:6px}
-.out img,.out svg{max-width:100%;height:auto}
-.out table{border-collapse:collapse;font-size:.85rem;display:block;overflow-x:auto}
-.out th,.out td{border:1px solid var(--line);padding:3px 8px;text-align:right}
-.md img{max-width:100%}
-.md table{border-collapse:collapse}.md th,.md td{border:1px solid var(--line);padding:4px 8px}
-.md pre{background:var(--code);padding:10px;border-radius:6px;overflow-x:auto}
-.md code{background:var(--code);padding:1px 4px;border-radius:4px}.md pre code{padding:0}
-.md blockquote{margin:0;padding-left:14px;border-left:3px solid var(--line);color:var(--muted)}
-@media print{
-  @page{margin:16mm}
-  body{background:#fff;color:#000;font-size:11pt}
-  main{max-width:none;padding:0}
-  .ui{display:none!important}
-  #nb{border:0;padding:0;background:#fff}
-  .cell,.out img,.out svg,.out table{break-inside:avoid}
-  .code pre,.out pre{overflow:visible}
-  .nocode .code{display:none}
-  .noout .out{display:none}
-  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
+  /* Selve notatboken */
+  #nb { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
+  .cell { margin: 0 0 18px; }
+  .code pre { margin: 0; padding: 10px 12px; font-size: 13px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; background: var(--bg); }
+  .code pre code.hljs { background: none; padding: 0; }
+  .out { margin: 6px 0 0; }
+  .out pre { margin: 0; padding: 6px 12px; font-size: 12.5px; line-height: 1.4; white-space: pre-wrap; word-break: break-word; background: none; border: 0; }
+  .out.err pre { background: rgba(224, 113, 106, 0.12); border-radius: 6px; }
+  .out img, .out svg { max-width: 100%; height: auto; background: #fff; }
+  .out table { font-size: 0.85rem; }
+  .out th, .out td { border: 1px solid var(--border); padding: 3px 8px; text-align: right; }
+  .md table { display: table; }
+  .md th, .md td { border: 1px solid var(--border); }
+
+  @media print {
+    @page { margin: 16mm; }
+    body { font-size: 11pt; }
+    .ui { display: none !important; }
+    #nb { border: 0; padding: 0; background: #fff; color: #000; }
+    .code pre { background: #f6f8fa; border-color: #ddd; }
+    .out th, .out td, .md th, .md td { border-color: #ccc; }
+    .cell, .out img, .out svg, .out table { break-inside: avoid; }
+    .code pre, .out pre { overflow: visible; }
+    .nocode .code { display: none; }
+    .noout .out { display: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
 </style>
-</head>
-<body>
-<main>
-  <div class="ui">
-    <a class="home" href="https://jonasbratland.com/">← Back to jonasbratland.com</a>
-    <h1>ipynb → PDF</h1>
-    <p class="sub">Your file is read locally in your browser and is never uploaded anywhere.</p>
-    <div id="drop" tabindex="0"><b>Choose an .ipynb file</b> or drag it here</div>
-    <input id="file" type="file" accept=".ipynb,application/json" hidden>
-    <div id="msg"></div>
-    <div class="bar">
-      <span id="name">No file selected</span>
-      <label class="opt"><input type="checkbox" id="hideCode"> Hide code</label>
-      <label class="opt"><input type="checkbox" id="hideOut"> Hide output</label>
-      <button id="pdf" disabled>Create PDF</button>
-      <button id="clear" class="alt" disabled>Reset</button>
-    </div>
-    <p class="sub" style="font-size:.85rem">Click “Create PDF”, then choose “Save as PDF” as the destination in the print dialog.</p>
+
+<div class="ui">
+  <div class="dropzone" id="drop" tabindex="0">
+    <strong>Velg en .ipynb-fil</strong> eller dra den hit
+    <small>.ipynb</small>
   </div>
-  <div id="nb" hidden></div>
-</main>
+  <input id="file" type="file" accept=".ipynb,application/json" hidden>
+  <div class="error" id="msg"></div>
+
+  <div class="actions">
+    <span class="small" id="name" style="flex:1; min-width:160px">Ingen fil valgt</span>
+    <label class="check"><input type="checkbox" id="hideCode"> Skjul kode</label>
+    <label class="check"><input type="checkbox" id="hideOut"> Skjul output</label>
+    <button class="btn" id="pdf" disabled>Lag PDF</button>
+    <button class="btn secondary" id="clear" disabled>Nullstill</button>
+  </div>
+  <p class="small">Trykk «Lag PDF», og velg «Lagre som PDF» som skriver i utskriftsvinduet.</p>
+</div>
+
+<div id="nb" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
@@ -116,7 +99,7 @@ function outputEl(o, lang) {
     const m = o.data || {};
     if (m['image/png'])       d.innerHTML = `<img alt="" src="data:image/png;base64,${src(m['image/png']).replace(/\s/g,'')}">`;
     else if (m['image/jpeg']) d.innerHTML = `<img alt="" src="data:image/jpeg;base64,${src(m['image/jpeg']).replace(/\s/g,'')}">`;
-    else if (m['image/svg+xml']) d.innerHTML = DOMPurify.sanitize(src(m['image/svg+xml']), {USE_PROFILES: {svg: true, svgFilters: true}});
+    else if (m['image/svg+xml']) d.innerHTML = DOMPurify.sanitize(src(m['image/svg+xml']), {USE_PROFILES: {svg: true, svgFilters: true} });
     else if (m['text/html'])  d.innerHTML = DOMPurify.sanitize(src(m['text/html']));
     else if (m['text/latex']) d.innerHTML = renderMath(src(m['text/latex']).replace(/^\$\$?|\$\$?$/g, ''), true);
     else if (m['text/plain']) d.innerHTML = `<pre>${esc(src(m['text/plain']))}</pre>`;
@@ -127,7 +110,7 @@ function outputEl(o, lang) {
 
 function render(json) {
   const cells = json.cells || (json.worksheets && json.worksheets[0].cells);
-  if (!cells) throw new Error('No cells found in the file.');
+  if (!cells) throw new Error('Fant ingen celler i filen.');
   const lang = (json.metadata?.language_info?.name || json.metadata?.kernelspec?.language || 'python').toLowerCase();
   nb.innerHTML = '';
   for (const c of cells) {
@@ -165,10 +148,10 @@ function load(file) {
       $('name').textContent = file.name;
       $('pdf').disabled = $('clear').disabled = false;
     } catch (e) {
-      msg.textContent = 'Could not read the file: ' + e.message;
+      msg.textContent = 'Klarte ikke å lese filen: ' + e.message;
     }
   };
-  r.onerror = () => msg.textContent = 'Could not read the file.';
+  r.onerror = () => msg.textContent = 'Klarte ikke å lese filen.';
   r.readAsText(file);
 }
 
@@ -183,15 +166,13 @@ $('hideCode').onchange = e => nb.classList.toggle('nocode', e.target.checked);
 $('hideOut').onchange = e => nb.classList.toggle('noout', e.target.checked);
 $('pdf').onclick = () => {
   const old = document.title;
-  document.title = title;          // suggested file name for the PDF
+  document.title = title;          // foreslått filnavn for PDF-en
   window.print();
   document.title = old;
 };
 $('clear').onclick = () => {
   nb.innerHTML = ''; nb.hidden = true; fileIn.value = '';
-  $('name').textContent = 'No file selected';
+  $('name').textContent = 'Ingen fil valgt';
   $('pdf').disabled = $('clear').disabled = true;
 };
 </script>
-</body>
-</html>

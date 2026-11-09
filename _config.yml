@@ -21,6 +21,11 @@ defaults:
       path: "blog"
     values:
       layout: post
+  # ... og filer i tools/, som bruker _layouts/tool.html
+  - scope:
+      path: "tools"
+    values:
+      layout: tool
 
 # Markdown på samme måte som GitHub
 markdown: kramdown
@@ -28,8 +33,10 @@ kramdown:
   input: GFM
 
 # Gjør [lenke](side.md) om til side.html (GitHub Pages har denne på fra før)
+#   og redirect_from: lar gamle adresser sende videre til nye
 plugins:
   - jekyll-relative-links
+  - jekyll-redirect-from
 
 # Filer som ikke skal bli en del av nettsiden
 exclude:
