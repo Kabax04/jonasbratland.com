@@ -1,0 +1,16 @@
+{% comment %}
+  Liste over blogginnlegg (alle .md-filer i blog/), nyeste først.
+  Bruk:  {% include post-list.html %}            → alle innlegg
+         {% include post-list.html limit=3 %}    → bare de 3 nyeste
+{% endcomment %}
+{% assign posts = site.pages | where_exp: "p", "p.dir == '/blog/'" | sort: "date" | reverse %}
+{% assign limit = include.limit | default: posts.size %}
+<ul class="post-list">
+  {% for post in posts limit: limit %}
+  <li>
+    <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%d.%m.%Y' }}</time>
+    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    {% if post.description %}<p>{{ post.description }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>

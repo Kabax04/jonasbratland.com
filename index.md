@@ -1,31 +1,23 @@
-<link rel="stylesheet" type="text/css" href="/custom.css">
-
-[__>Hjem<__](index.md) | [Om oss](om.md) | [Kontakt](kontakt.md)
-
+---
+title: Hjem
 ---
 
-*Kunnskap er bortkastet hvis den ikke deles.*
+# Hei, jeg er Jonas
 
----
+<p class="lead">{{ site.tagline }}</p>
 
-### Latest posts
+Jeg studerer geomatikk ved NMBU. Her samler jeg små verktøy jeg har laget, prosjekter fra studiet og ting jeg har lært underveis.
 
-[Jonas' signaturspaghetti](blog/onepotspaghetti.md)
+## Siste innlegg
 
-[Split FLAC CUE files with foobar2000](blog/splitflacfoobar.md)
+{% include post-list.html limit=3 %}
 
-### Tools
+[Alle innlegg →](blogg.md)
 
-[T-verdi kalkulator](tools.md)
+## Verktøy
 
-[Konverter .kof til .geojson](kof2geojson.html)
+- [T-verdi kalkulator](tools/tverdi.html)
+- [Konverter .kof til .geojson](kof2geojson.html)
+- [Konverter .ipynb til .pdf](ipynb2pdf.html)
 
-[Konverter .ipynb til .pdf](ipynb2pdf.html)
-
-### Other
-
-[Github](https://github.com/Kabax04/jonasbratland.com)
-
-[Nyttige WMS-tjenester](wmstjenester.md)
-
-[Tromsø Lufthavn - Studieprosjekt](tromso/index.html)
+[Mer om verktøyene →](verktoy.md)

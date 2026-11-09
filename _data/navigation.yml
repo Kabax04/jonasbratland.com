@@ -1,0 +1,23 @@
+# ------------------------------------------------------------
+# Menyen øverst på alle sider.
+# Legg til, fjern eller bytt rekkefølge på linjene under.
+#   title: teksten som vises i menyen
+#   url:   adressen til siden (filnavn med .html i stedet for .md)
+#   folder (valgfri): menypunktet markeres også for sider i denne mappen
+# ------------------------------------------------------------
+
+- title: Hjem
+  url: /
+
+- title: Blogg
+  url: /blogg.html
+  folder: /blog/
+
+- title: Verktøy
+  url: /verktoy.html
+
+- title: Prosjekter
+  url: /prosjekter.html
+
+- title: Om meg
+  url: /om.html

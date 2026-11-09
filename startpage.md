@@ -1,50 +1,16 @@
-<link rel="stylesheet" type="text/css" href="custom.css">
-
-<style>
-/* Fjern zebra-striping og sikre transparent bakgrunn */
-table tbody tr:nth-child(even),
-table tr:nth-child(even) {
-  background-color: transparent !important;
-}
-
-/* Hvis temaet setter cellbakgrunn */
-table th, table td {
-  background-color: transparent !important;
-}
-
-/* Sentrer Markdown-tabeller - tvinger auto-bredde så margin:auto fungerer */
-table {
-  display: table !important;
-  width: auto !important;
-  max-width: 90% !important; /* begrens bredde på store skjermer */
-  margin-left: auto !important;
-  margin-right: auto !important;
-  border-collapse: collapse;
-}
-
-/* Logo-stil: bruk lokal SVG/PNG (gjennomsiktig bakgrunn) */
-.logo {
-  width:360px;
-  display:block;
-  margin:0 auto 16px;
-  background: transparent !important;
-  background-color: transparent !important;
-}
-</style>
-
-
-<div style="text-align:center; margin:64px 0;">
-  <img src="img/ddg.png"
-       alt="DuckDuckGo logo"
-       class="logo"
-       style="background:transparent !important;">
-  <form method="GET" action="https://duckduckgo.com/" style="display:inline-block;">
-    <input type="text" name="q" placeholder="Search with DuckDuckGo" style="padding:6px; width:640px;">
-  </form>
-</div>
-
+---
+title: Startside
+wide: true
 ---
 
+<!-- Min startside i nettleseren. Ikke med i menyen. -->
+
+<div class="search">
+  <img src="img/ddg.png" alt="DuckDuckGo">
+  <form method="GET" action="https://duckduckgo.com/">
+    <input type="text" name="q" placeholder="Search with DuckDuckGo" autofocus>
+  </form>
+</div>
 
 | **Frequently used** | **Tools**      | **Sailing the seas** | **Streaming**   | **Shopping**      |
 | ------------------- | -------------- | -------------------- | --------------- | ----------------- |

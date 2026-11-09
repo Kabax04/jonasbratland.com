@@ -1,0 +1,171 @@
+/* ------------------------------------------------------------
+   Stilark for hele jonasbratland.com
+   Endre fargene under :root for å endre fargene overalt.
+   ------------------------------------------------------------ */
+
+:root {
+  --bg: #121412;          /* bakgrunn */
+  --surface: #1a1d1a;     /* bokser, kodeblokker, header */
+  --border: #2a2f2a;      /* tynne linjer */
+  --text: #e4e4e4;        /* vanlig tekst */
+  --muted: #9aa39a;       /* dempet tekst (datoer o.l.) */
+  --accent: #3ddc5a;      /* grønn: lenker og aktivt menypunkt */
+  --max-width: 760px;     /* maks bredde på innholdet */
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.wrap.wide { max-width: 1100px; }
+
+main { flex: 1; padding-top: 32px; padding-bottom: 64px; }
+
+/* ---------- Header og meny ---------- */
+
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.site-header .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.site-title {
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px; }
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.site-nav a:hover { color: var(--text); background: var(--border); }
+.site-nav a.active { color: var(--accent); background: rgba(61, 220, 90, 0.1); }
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.site-footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* ---------- Tekst ---------- */
+
+a { color: var(--accent); }
+a:hover { text-decoration-thickness: 2px; }
+
+h1, h2, h3 { line-height: 1.25; margin: 1.6em 0 0.5em; }
+h1 { font-size: 2rem; margin-top: 0; }
+h2 { font-size: 1.4rem; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+h3 { font-size: 1.15rem; }
+
+img { max-width: 100%; height: auto; }
+
+hr { border: 0; border-top: 1px solid var(--border); margin: 2em 0; }
+
+blockquote {
+  margin: 1.2em 0;
+  padding: 2px 16px;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+
+code {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  overflow-x: auto;
+}
+pre code { border: 0; padding: 0; background: none; }
+
+table { border-collapse: collapse; width: 100%; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { text-align: left; padding: 6px 12px; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-weight: 600; }
+
+iframe { max-width: 100%; border: 1px solid var(--border); border-radius: 8px; }
+
+/* Dempet tekst, f.eks. under overskrifter */
+.lead { font-size: 1.15rem; color: var(--muted); margin-top: -0.3em; }
+.meta { color: var(--muted); font-size: 0.9rem; margin-top: -0.6em; }
+
+/* ---------- Bloggliste ---------- */
+
+.post-list { list-style: none; padding: 0; }
+.post-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.post-list time { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; min-width: 6.5em; }
+.post-list a { font-weight: 600; text-decoration: none; }
+.post-list a:hover { text-decoration: underline; }
+.post-list p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+.back { margin: 0 0 8px; font-size: 0.9rem; }
+.back a { text-decoration: none; }
+
+/* ---------- Startside (startpage.md) ---------- */
+
+.search { text-align: center; margin: 32px 0 40px; }
+.search img { width: 280px; display: block; margin: 0 auto 16px; }
+.search input {
+  width: 100%;
+  max-width: 640px;
+  font: inherit;
+  padding: 10px 14px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.search ~ table { display: table; width: auto; margin: 0 auto; }
+.search ~ table td { border: 0; padding: 4px 18px; }
+.search ~ table th { border-bottom: 1px solid var(--border); padding: 6px 18px; }
+.search input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }

@@ -1,10 +1,8 @@
-<link rel="stylesheet" type="text/css" href="/custom.css">
-
-[Hjem](../index.md) | [Om oss](../om.md) | [Kontakt](../kontakt.md)
-
 ---
-
-# Jonas' signaturspaghetti
+title: "Jonas' signaturspaghetti"
+date: 2026-10-20
+description: "En enkel one pot spaghetti med kjøttdeig og tomatsaus, laget i én gryte på ca. 25 minutter."
+---
 
 _En enkel og smakfull one pot spaghetti med kjøttdeig og tomatsaus, laget i én gryte på ca. 25 minutter._
 
@@ -37,5 +35,3 @@ _En enkel og smakfull one pot spaghetti med kjøttdeig og tomatsaus, laget i én
 5. Skru ned varmen til svak koking og legg på lokk. La retten småkoke i 12–15 minutter til spagettien er al dente. Rør godt hvert 3. minutt for å unngå at pastaen klistrer seg eller svir seg.
 6. Ta gryten av platen når pastaen er ferdig og sausen har tyknet. Topp med revet parmesan og fersk basilikum ved servering.
 
----
-Jonas Bratland, Okt 2026

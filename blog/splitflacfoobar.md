@@ -1,10 +1,8 @@
-<link rel="stylesheet" type="text/css" href="/custom.css">
-
-[Hjem](../index.md) | [Om oss](../om.md) | [Kontakt](../kontakt.md)
-
 ---
-
-# Use foobar2000 to split your FLAC and CUE files into individual flac files
+title: "Use foobar2000 to split your FLAC and CUE files into individual FLAC files"
+date: 2025-02-16
+description: "Step-by-step guide to splitting one big FLAC file into separate tracks."
+---
 
 Are you having trouble following these instructuions? Watch the video tutorial [here!](https://youtu.be/lc4BL2adPeo?si=y3jApKJ0NXNRdojd)
 
@@ -69,5 +67,3 @@ Explore other features within foobar2000. From playlists to DSP effects, thereâ€
 If foobar2000 isnâ€™t your preference, other software options exist. If you want a software just for splitting flac-files, [CUETools](http://cue.tools/wiki/CUETools_Download) might be what you're looking for. 
 Applications like VLC or Audacity also handle audio file management effectively.
 
----
-Jonas Bratland, Feb 2025
