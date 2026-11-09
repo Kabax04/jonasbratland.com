@@ -4,7 +4,7 @@ title: Hjem
 
 # Hei, jeg er Jonas
 
-<p class="lead">{{ site.tagline }}</p>
+<p class="lead"><em>{{ site.tagline }}</em></p>
 
 Jeg studerer geomatikk ved NMBU. Her samler jeg små verktøy jeg har laget, prosjekter fra studiet og ting jeg har lært underveis.
 
