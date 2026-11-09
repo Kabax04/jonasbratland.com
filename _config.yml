@@ -1,6 +1,38 @@
-include: ["style.css"]
-title: jonasbratland.com
-logo: favicon.ico
+# ------------------------------------------------------------
+# Innstillinger for hele nettsiden
+# ------------------------------------------------------------
 
-includes:
-  - head
+title: jonasbratland.com
+tagline: Kunnskap er bortkastet hvis den ikke deles.
+author: Jonas Bratland
+email: web@jonasbratland.com
+github: Kabax04
+lang: no
+
+# Standardverdier, så du slipper å skrive det samme i hver fil.
+defaults:
+  # Alle sider bruker layouten _layouts/default.html ...
+  - scope:
+      path: ""
+    values:
+      layout: default
+  # ... bortsett fra filer i blog/, som bruker _layouts/post.html
+  - scope:
+      path: "blog"
+    values:
+      layout: post
+
+# Markdown på samme måte som GitHub
+markdown: kramdown
+kramdown:
+  input: GFM
+
+# Gjør [lenke](side.md) om til side.html (GitHub Pages har denne på fra før)
+plugins:
+  - jekyll-relative-links
+
+# Filer som ikke skal bli en del av nettsiden
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock

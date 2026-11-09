@@ -1,11 +1,14 @@
-<link rel="stylesheet" type="text/css" href="/custom.css">
-
-[Hjem](index.md) | [__>Om oss<__](om.md) | [Kontakt](kontakt.md)
-
+---
+title: Om meg
 ---
 
-Jonas Bratland
+# Om meg
 
-Student at NMBU, Geomatics
+**Jonas Bratland**, student i geomatikk ved NMBU.
 
-Competance in GIS, Surveying, Remote Sensing, and Geospatial Data Analysis
+Kompetanse innen GIS, landmåling, fjernmåling og analyse av geodata.
+
+## Kontakt
+
+- E-post: [web@jonasbratland.com](mailto:web@jonasbratland.com)
+- GitHub: [Kabax04](https://github.com/Kabax04)

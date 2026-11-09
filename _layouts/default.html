@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--
+  Grunnmalen for alle sider. Innholdet fra .md-filene havner inne i <main> under.
+  Menyen hentes fra _data/navigation.yml, og stilen fra assets/css/style.css.
+-->
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <nav class="site-nav">
+        {% for item in site.data.navigation %}
+          {% assign active = false %}
+          {% if page.url == item.url %}{% assign active = true %}{% endif %}
+          {% if item.url == '/' and page.url == '/index.html' %}{% assign active = true %}{% endif %}
+          {% if item.folder and page.url contains item.folder %}{% assign active = true %}{% endif %}
+          <a href="{{ item.url | relative_url }}"{% if active %} class="active" aria-current="page"{% endif %}>{{ item.title }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap{% if page.wide %} wide{% endif %}">
+    {{ content }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© {{ site.time | date: '%Y' }} {{ site.author }}</span>
+      <span>
+        <a href="mailto:{{ site.email }}">{{ site.email }}</a> ·
+        <a href="https://github.com/{{ site.github }}">GitHub</a>
+      </span>
+    </div>
+  </footer>
+
+</body>
+</html>
